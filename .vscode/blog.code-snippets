@@ -1,0 +1,18 @@
+{
+  "Velite Post Template": {
+    "prefix": "---",
+    "body": [
+      "---",
+      "title: ${1:포스트 제목}",
+      "date: ${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE}",
+      "tags: [${2:\"Next.js\", \"TailwindCSS\"}]",
+      "description: ${3:이 포스트의 요약을 입력하세요.}",
+      "---",
+      "",
+      "# ${1:포스트 제목}",
+      "",
+      "${0:여기에 내용을 작성하세요.}"
+    ],
+    "description": "Velite 스키마 기반의 MDX 프론트매터 템플릿을 생성합니다."
+  }
+}

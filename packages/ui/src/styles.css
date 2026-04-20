@@ -1,0 +1,31 @@
+@import "tailwindcss" prefix(ui);
+@import "@repo/tailwind-config";
+/* @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"); */
+
+body {
+  @apply ui:bg-background ui:text-foreground;
+}
+
+button {
+  @apply ui:cursor-pointer;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.material-symbols-rounded {
+  @apply ui:select-none;
+
+  font-variation-settings:
+    "FILL" 1,
+    "wght" 400,
+    "GRAD" 200,
+    "opsz" 24;
+}
+
+.no-scroll {
+  -ms-overflow-style: none;
+}
+
+.no-scroll::-webkit-scrollbar {
+  display: none;
+}

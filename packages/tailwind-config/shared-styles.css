@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gray-dark: #111111;
+  --color-gray: #505050;
+  --color-gray-light: #767676;
+  --color-disabled: #999999;
+  --color-white: #ffffff;
+
+  --color-background: #fffcf7;
+  --color-foreground: #111111;
+
+  --color-primary: #a78bfa;
+
+  --color-primary-50: #f8f7ff;
+  --color-primary-100: #f0edff;
+  --color-primary-200: #e0d9ff;
+  --color-primary-300: #c9bfff;
+  --color-primary-400: #b1a2ff;
+  --color-primary-500: #a78bfa;
+  --color-primary-600: #8b6df1;
+  --color-primary-700: #7357d1;
+  --color-primary-800: #5f45b0;
+  --color-primary-900: #4f3a91;
+  --color-primary-950: #2d2155;
+
+  --font-sans: "SUIT Variable";
+  --font-serif: "csm";
+  --font-hand: "hand";
+  --font-bubbles: "Rubik Bubbles";
+}

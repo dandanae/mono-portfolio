@@ -1,0 +1,20 @@
+{
+  "name": "@repo/utils",
+  "version": "0.0.0",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^19"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "clsx": "^2.1.1",
+    "typescript": "5.9.2"
+  },
+  "dependencies": {
+    "tailwind-merge": "^3.4.0"
+  }
+}

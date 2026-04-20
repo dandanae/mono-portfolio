@@ -1,0 +1,92 @@
+{
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.next": true,
+    "**/.turbo": true,
+    "**/.pnpm-store": true
+    // "**/*.config.ts": true,
+    // "**/*.config.js": true,
+    // "**/*.config.mjs": true
+  },
+  "eslint.useFlatConfig": true,
+  "eslint.validate": ["typescript", "typescriptreact"],
+  "eslint.format.enable": true,
+  "eslint.workingDirectories": [
+    { "mode": "auto" },
+    { "pattern": "./apps/*/" },
+    { "pattern": "./packages/*/" }
+  ],
+
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "editor.wordWrap": "on",
+  "editor.wordWrapColumn": 120,
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "tailwindCSS.experimental.classRegex": [
+    ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sourceLanguage": "ko",
+  "i18n-ally.displayLanguage": "ko",
+  "i18n-ally.localesPaths": ["messages", "src/i18n"],
+
+  "diffEditor.experimental.useTrueInlineView": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.cursorBlinking": "expand",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "editor.cursorStyle": "line-thin",
+  "editor.dragAndDrop": false,
+  // "editor.fontFamily": "'D2Coding', Consolas, 'Courier New', monospace",
+  "editor.guides.bracketPairs": true,
+  "editor.minimap.maxColumn": 80,
+  "editor.minimap.showSlider": "always",
+  "editor.mouseWheelZoom": true,
+  "editor.renderLineHighlight": "all",
+  "editor.renderWhitespace": "all",
+  "editor.showFoldingControls": "always",
+  "editor.smoothScrolling": true,
+  "editor.wordSegmenterLocales": ["ko"],
+  "editor.wrappingIndent": "indent",
+  "explorer.compactFolders": false,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "explorer.excludeGitIgnore": true,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "files.autoGuessEncoding": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "scm.alwaysShowRepositories": true,
+  "scm.compactFolders": false,
+  "scm.defaultViewMode": "tree",
+  "scm.diffDecorationsGutterWidth": 5,
+  "scm.graph.badges": "all",
+  "scm.inputFontFamily": "editor",
+  "scm.inputFontSize": 14,
+  "search.showLineNumbers": true,
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.enableImages": true,
+  "terminal.integrated.enableVisualBell": true,
+  "terminal.integrated.mouseWheelZoom": true,
+  "terminal.integrated.smoothScrolling": true,
+  "workbench.editor.closeOnFileDelete": true,
+  "workbench.editor.pinnedTabsOnSeparateRow": true,
+  "workbench.editor.scrollToSwitchTabs": true,
+  "workbench.editor.wrapTabs": true,
+  "workbench.list.smoothScrolling": true,
+  "workbench.view.alwaysShowHeaderActions": true
+}

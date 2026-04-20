@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Moirai+One&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/MonadABXY/mona-font/web/mona.css');
+@import 'tailwindcss';
+@import '@repo/tailwind-config';
+
+@font-face {
+  font-family: 'csm';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.1/ChosunSm.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'hand';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2402_1@1.0/Ownglyph_meetme-Rg.woff2') format('woff2');
+  font-weight: normal;
+  font-display: swap;
+}
+
+:root {
+  --background: #fffcf7;
+  --foreground: #111111;
+
+  --font-bagel: 'Bagel Fat One', system-ui;
+  --font-moirai: 'Moirai One', system-ui;
+  --font-mona: 'Mona10x12', system-ui;
+  --font-csm: 'csm', system-ui;
+  --font-hand: 'hand', system-ui;
+  --font-suit: 'SUIT Variable', system-ui;
+  --font-paperlogy: 'Paperlogy', system-ui;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-bagel: var(--font-bagel);
+  --font-moirai: var(--font-moirai);
+  --font-mona: var(--font-mona);
+  --font-limgul: var(--font-limgul);
+  --font-csm: var(--font-csm);
+  --font-hand: var(--font-hand);
+  --font-suit: var(--font-suit);
+  --font-paperlogy: var(--font-paperlogy);
+}
+
+.dark {
+  --background: #121212;
+  --foreground: #ededed;
+  color-scheme: dark;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+* {
+  cursor: url(https://cur.cursors-4u.net/nature/nat-10/nat997.cur) auto;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'SUIT Variable', sans-serif;
+}
+
+::selection {
+  @apply bg-primary text-foreground transition-all duration-300;
+}
+::-moz-selection {
+  @apply bg-primary text-foreground transition-all duration-300;
+}
+
+.focus-ring {
+  @apply focus-visible:ring-primary-600 transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-offset-4;
+}
+
+.hover-ring {
+  @apply hover:ring-primary-600 rounded-lg transition-all duration-300 hover:ring-1 hover:ring-offset-4;
+}
+
+.Toastify__close-button {
+  display: none;
+}
+
+/* code {
+  @apply bg-primary-600 mx-1.5 my-0.5 inline-block rounded-full py-1 pr-2.5 pl-[28px] font-sans text-sm text-white select-none;
+  background-image: url('https://blog.kakaocdn.net/dn/FnKKw/btsmO6d4vBg/uhCyOdKrLDzRCMkSEpYq1K/img.png');
+  background-size: 20px;
+  background-position: 5px center;
+  background-repeat: no-repeat;
+}
+
+p {
+  @apply my-4;
+}
+b {
+  @apply bg-primary-200 rounded-lg px-1.5 py-0.5 font-sans font-medium;
+}
+ul {
+  @apply ml-2 list-inside list-disc space-y-2 font-sans tracking-tight;
+} */
+
+/* :root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+} */

@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Moirai+One&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/MonadABXY/mona-font/web/mona.css');
+@import url('https://cdn.jsdelivr.net/gh/MonadABXY/limgul-font/limgul.css');
+@import 'tailwindcss';
+@import '@repo/tailwind-config';
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+
+  --font-bagel: 'Bagel Fat One', system-ui;
+  --font-moirai: 'Moirai One', system-ui;
+  --font-mona: 'Mona10x12', system-ui;
+  --font-limgul: 'Limgul12', system-ui;
+}
+
+.dark {
+  --background: #121212;
+  --foreground: #ededed;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+* {
+  cursor: url(https://cur.cursors-4u.net/nature/nat-10/nat997.cur), auto;
+  scroll-behavior: smooth;
+}
+
+::selection {
+  @apply bg-primary text-white;
+}
+::-moz-selection {
+  @apply bg-primary text-white;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-bagel: var(--font-bagel);
+  --font-moirai: var(--font-moirai);
+  --font-mona: var(--font-mona);
+  --font-limgul: var(--font-limgul);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'SUIT Variable', sans-serif;
+}
+
+.swiper-pagination-bullet {
+  display: flex !important;
+  justify-content: flex-end;
+  background: transparent !important;
+  align-items: center;
+  width: auto;
+  padding: 20px 10px;
+  border-radius: 0px;
+  text-align: right;
+  font-size: 18px;
+  color: #fff;
+  opacity: 1 !important;
+  font-family: var(--font-mona) !important;
+
+  transition: font-size 0.3s ease-in-out;
+}
+
+.swiper-pagination-bullet:hover {
+  font-size: 32px !important;
+}
+
+.swiper-pagination-bullet-active {
+  background: transparent !important;
+  color: #fff;
+  font-size: 32px;
+}
