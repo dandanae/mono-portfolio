@@ -1,10 +1,11 @@
+'use client';
+
 import React from 'react';
 
 const Loading = () => {
   return (
-    <div className="fixed inset-0 z-9999 flex items-center justify-center">
-      <div className="bg-primary/20 absolute aspect-square w-full max-w-58 rounded-full blur-2xl md:max-w-md" />
-      <span>로딩 중..</span>
+    <div className="bg-background/50 fixed inset-0 z-50 flex flex-col items-center justify-center backdrop-blur-sm">
+      <span className="loader"></span>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 'use client';
-import { josa } from 'es-hangul';
+
 import { useParams, useRouter } from 'next/navigation';
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { AlertDialog, Button, IconButton, TextInput } from '@repo/ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -25,6 +25,7 @@ import { usePlotAtoms, useScrollAtoms } from '../plot.atom';
 import { ScenarioFormValues } from '../plot.schema';
 import { deletePlot, getPlot, updatePlot } from '../plot.service';
 import { ScrollWrapper, Title } from '../ui';
+import { replaceJosa, replaceJson } from '../useJosa';
 
 const Article = () => {
   const router = useRouter();
@@ -111,47 +112,6 @@ const Article = () => {
     router.push('/');
   };
 
-  const replaceJosa = (text: string, kpc: string, pc: string): string => {
-    const applyReplacement = (content: string, targetTag: string, name: string): string => {
-      const withJosaRegex = new RegExp(`{{${targetTag}}}([가-힣]+)`, 'gi');
-
-      const processed = content.replace(withJosaRegex, (match, p1) => {
-        const targetJosa = josaSelectorMap[p1];
-        if (targetJosa) {
-          return josa(name, targetJosa as any);
-        }
-        return name + p1;
-      });
-
-      const standaloneRegex = new RegExp(`{{${targetTag}}}`, 'g');
-      return processed.replace(standaloneRegex, name);
-    };
-
-    const step1 = applyReplacement(text, 'kpc', kpc);
-    const step2 = applyReplacement(step1, 'pc', pc);
-
-    return step2;
-  };
-
-  const replaceJson = useCallback((node: any, kpc: string, pc: string): any => {
-    if (!node) return node;
-    if (node.type === 'text' && node.text) {
-      return {
-        ...node,
-        text: replaceJosa(node.text, kpc, pc),
-      };
-    }
-
-    if (node.content && Array.isArray(node.content)) {
-      return {
-        ...node,
-        content: node.content.map((child: any) => replaceJson(child, kpc, pc)),
-      };
-    }
-
-    return node;
-  }, []);
-
   useEffect(() => {
     if (plot?.content && editor) {
       const processedContent =
@@ -161,7 +121,7 @@ const Article = () => {
         editor.commands.setContent(processedContent);
       }
     }
-  }, [plot?.content, editor, kpc, pc, replaceJson]);
+  }, [plot?.content, editor, kpc, pc]);
 
   return (
     <div className="relative px-8 md:px-6 md:pl-20">
@@ -203,8 +163,6 @@ const Article = () => {
             </Button>
           </div>
         </div>
-
-        <p>진행도</p>
       </div>
       <main className="relative container flex h-[calc(100vh-6rem)] flex-col gap-2">
         <ScrollWrapper className="no-scroll flex-1 overflow-y-auto px-4 py-28">
@@ -220,7 +178,7 @@ const Article = () => {
               <div className="absolute top-0 right-1 h-5 w-5 rounded-md" style={{ backgroundColor: secondaryColor }} />
             </div>
           </div>
-          <h3 className="text-lg font-medium whitespace-pre-wrap opacity-70">{plot?.line}</h3>
+          <h3 className="mona10x12 font-medium whitespace-pre-wrap">{plot?.info}</h3>
           <Title title={plot?.title ?? ''} writer={plot?.writer ?? ''} line={plot?.line ?? ''} />
 
           <EditorContent editor={editor} className="font-paperlogy min-h-full" />
@@ -231,36 +189,3 @@ const Article = () => {
 };
 
 export default Article;
-
-const josaSelectorMap: Record<string, string> = {
-  이: '이/가',
-  가: '이/가',
-  을: '을/를',
-  를: '을/를',
-  은: '은/는',
-  는: '은/는',
-  으로: '으로/로',
-  로: '으로/로',
-  와: '와/과',
-  과: '와/과',
-  이나: '이나/나',
-  나: '이나/나',
-  이란: '이란/란',
-  란: '이란/란',
-  아: '아/야',
-  야: '아/야',
-  이랑: '이랑/랑',
-  랑: '이랑/랑',
-  이에요: '이에요/예요',
-  이예요: '이에요/예요',
-  예요: '이에요/예요',
-  에요: '이에요/예요',
-  으로서: '으로서/로서',
-  로서: '으로서/로서',
-  으로써: '으로써/로써',
-  로써: '으로써/로써',
-  으로부터: '으로부터/로부터',
-  로부터: '으로부터/로부터',
-  이라: '이라/라',
-  라: '이라/라',
-};

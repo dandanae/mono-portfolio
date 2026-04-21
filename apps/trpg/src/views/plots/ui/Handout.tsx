@@ -90,7 +90,7 @@ const Handout = ({ node, updateAttributes, editor }: HandoutProps) => {
   if (isEditable) {
     return (
       <NodeViewWrapper>
-        <div className="mx-auto my-6 flex w-[270px] flex-col items-center">
+        <div className="mx-auto my-12 flex w-[270px] flex-col items-center">
           <div
             aria-hidden
             className="relative m-auto block w-[270px] border-2 border-b-0 bg-white pt-4"
@@ -158,7 +158,7 @@ const Handout = ({ node, updateAttributes, editor }: HandoutProps) => {
         type="button"
         onClick={() => copy(text())}
         aria-label={`핸드아웃 복사 ${node.textContent}`}
-        className="hover-ring focus-ring my-6 w-full text-center active:scale-95"
+        className="hover-ring focus-ring my-12 w-full text-center active:scale-95"
       >
         <CopyWrapper isCopied={isCopied} className="flex w-[270px] flex-col items-center">
           <span

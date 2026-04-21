@@ -37,6 +37,14 @@ export const BranchItemNode = Node.create({
   },
 });
 
+declare module '@tiptap/core' {
+  interface Commands<ReturnType> {
+    branch: {
+      insertBranch: () => ReturnType;
+    };
+  }
+}
+
 // 2. 전체 탭 컨테이너 (Parent)
 export const BranchNode = Node.create({
   name: 'branch',
@@ -45,11 +53,45 @@ export const BranchNode = Node.create({
   selectable: true,
   draggable: true,
 
+  addAttributes() {
+    return {
+      activeIndex: { default: 0 },
+    };
+  },
+
   parseHTML() {
     return [{ tag: 'div[data-type="branch"]' }];
   },
+
   renderHTML({ HTMLAttributes }) {
     return ['div', mergeAttributes(HTMLAttributes, { 'data-type': 'branch' }), 0];
+  },
+
+  addCommands() {
+    return {
+      insertBranch:
+        () =>
+        ({ chain }) => {
+          return chain()
+            .insertContent({
+              type: this.name,
+              content: [
+                {
+                  type: 'branchItem',
+                  attrs: { title: '선택지 1', isActive: true },
+                  content: [{ type: 'paragraph', content: [{ type: 'text', text: '첫 번째 내용입니다.' }] }],
+                },
+                {
+                  type: 'branchItem',
+                  attrs: { title: '선택지 2', isActive: false },
+                  content: [{ type: 'paragraph', content: [{ type: 'text', text: '두 번째 내용입니다.' }] }],
+                },
+              ],
+            })
+            .focus()
+            .run();
+        },
+    };
   },
 
   addNodeView() {

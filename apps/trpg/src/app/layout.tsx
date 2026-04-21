@@ -2,7 +2,14 @@
 /* eslint-disable @next/next/no-page-custom-font */
 import type { Metadata } from 'next';
 import { OverlayProvider } from 'overlay-kit';
+import 'swiper/css';
+import 'swiper/css/free-mode';
+import 'swiper/css/grid';
+import 'swiper/css/mousewheel';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
 import Nav from '@/shared/Nav';
+import '@repo/ui/styles.css';
 import '@repo/ui/styles.css';
 import './globals.css';
 import Provider from './provider';

@@ -28,7 +28,7 @@ const Dice = ({ node, editor }: DiceProps) => {
     return (
       <NodeViewWrapper>
         <div
-          className="mx-auto my-6 flex w-fit items-center justify-center rounded-full px-4 py-1 font-sans text-sm text-white"
+          className="mx-auto my-12 flex w-fit items-center justify-center rounded-full px-4 py-1 font-sans text-sm text-white"
           style={{
             background: `linear-gradient(45deg, ${primaryColor}, ${secondaryColor})`,
           }}

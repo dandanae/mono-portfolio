@@ -9,7 +9,6 @@ export const scenarioSchema = z.object({
   content: z.record(z.any(), z.any()).refine(json => Object.keys(json).length > 0, {
     message: '시나리오 내용을 입력해 주세요',
   }),
-  updatedAt: z.iso.datetime().optional(),
   shared: z.boolean().optional(),
 });
 

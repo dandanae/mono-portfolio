@@ -1,6 +1,7 @@
 'use client';
 import { onAuthStateChanged } from 'firebase/auth';
 import { Provider as JotaiProvider } from 'jotai';
+import { AnimatePresence } from 'motion/react';
 import { ThemeProvider } from 'next-themes';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
@@ -54,7 +55,9 @@ const Provider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <QueryClientProvider client={queryClient}>
-        <JotaiProvider>{children}</JotaiProvider>
+        <JotaiProvider>
+          <AnimatePresence mode="wait">{children}</AnimatePresence>
+        </JotaiProvider>
       </QueryClientProvider>
       <ToastContainer
         position="top-center"

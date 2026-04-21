@@ -1,5 +1,6 @@
 // TabsComponent.tsx
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
+// AnimatePresence 추가
 import React from 'react';
 import { IconButton, TextInput } from '@repo/ui';
 import { cn } from '@repo/utils';
@@ -12,6 +13,13 @@ interface BranchProps {
   getPos: any;
 }
 
+const springTransition = {
+  type: 'spring',
+  stiffness: 400,
+  damping: 40,
+  mass: 1,
+};
+
 export const Branch = ({ node, editor, getPos }: BranchProps) => {
   const isEditable = editor.isEditable;
   const activeBranchItemIndex = Math.max(
@@ -22,9 +30,10 @@ export const Branch = ({ node, editor, getPos }: BranchProps) => {
   // 브랜치 아이템 선택 로직
   const selectBranchItem = (index: number) => {
     if (typeof getPos !== 'function') return;
+
     const { tr } = editor.state;
-    const pos = getPos();
-    let currentPos = pos + 1;
+    const startPos = getPos();
+    let currentPos = startPos + 1;
 
     node.content.forEach((child: any, offset: number, idx: number) => {
       tr.setNodeMarkup(currentPos, undefined, {
@@ -34,17 +43,18 @@ export const Branch = ({ node, editor, getPos }: BranchProps) => {
       currentPos += child.nodeSize;
     });
 
+    // 중요: 에디터에 포커스를 주면서 트랜잭션을 실행해야 즉시 반영됩니다.
     editor.view.dispatch(tr);
+    editor.commands.focus();
   };
 
-  // 브랜치 아이템 제목 수정 로직 추가
   const updateBranchItemTitle = (index: number, newTitle: string) => {
     if (typeof getPos !== 'function') return;
     const { tr } = editor.state;
     const pos = getPos();
     let currentPos = pos + 1;
 
-    node.content.forEach((child: any, offset: number, idx: number) => {
+    node.content.forEach((child: any, idx: number) => {
       if (idx === index) {
         tr.setNodeMarkup(currentPos, undefined, {
           ...child.attrs,
@@ -59,15 +69,24 @@ export const Branch = ({ node, editor, getPos }: BranchProps) => {
 
   const addBranchItemNode = () => {
     if (typeof getPos !== 'function') return;
+
+    const pos = getPos();
+    const nextIndex = node.content.childCount; // 0-based index
+
     editor
       .chain()
       .focus()
-      .insertContentAt(getPos() + node.nodeSize - 1, {
+      // 1. 기존 모든 탭의 isActive를 false로 만듦 (위의 selectBranchItem 로직 활용 권장)
+      // 2. 새 노드 삽입 (이때 isActive: true로 삽입)
+      .insertContentAt(pos + node.nodeSize - 1, {
         type: 'branchItem',
-        attrs: { title: `Branch ${node.content.childCount + 1}`, isActive: false },
-        content: [{ type: 'paragraph', content: [{ type: 'text', text: '새로운 탭 내용입니다.' }] }],
+        attrs: { title: `Branch ${nextIndex + 1}`, isActive: true },
+        content: [{ type: 'paragraph', content: [{ type: 'text', text: `새로운 탭 내용입니다.` }] }],
       })
       .run();
+
+    // 삽입 후 다시 한 번 상태 정리 (필요시)
+    setTimeout(() => selectBranchItem(nextIndex), 0);
   };
 
   const removeBranchItem = (index: number) => {
@@ -83,7 +102,6 @@ export const Branch = ({ node, editor, getPos }: BranchProps) => {
     let targetPos = -1;
     let targetSize = 0;
 
-    // 삭제할 노드의 절대 위치 계산
     node.content.forEach((child: any, offset: number, idx: number) => {
       if (idx === index) {
         targetPos = currentPos;
@@ -95,13 +113,14 @@ export const Branch = ({ node, editor, getPos }: BranchProps) => {
     if (targetPos !== -1) {
       tr.delete(targetPos, targetPos + targetSize);
 
-      // 삭제 후, 만약 삭제된 브랜치 아이템이 활성화 상태였다면 첫 번째 브랜치 아이템을 활성화
+      // 삭제된 탭이 활성 탭이었다면, 다른 탭 활성화
       if (index === activeBranchItemIndex) {
         const nextActiveIndex = index === 0 ? 0 : index - 1;
-        // 삭제 트랜잭션 이후 위치가 바뀌므로, 다시 순회하거나
-        // 간단하게 첫 번째 브랜치 아이템을 활성화하는 등의 처리가 필요할 수 있습니다.
-        // 여기서는 안전하게 첫 번째 브랜치 아이템을 활성화하도록 처리합니다.
-        // (실제 정교한 로직은 삭제 후 남은 노드들 중 하나에 isActive: true를 주어야 함)
+        editor.view.dispatch(tr);
+        setTimeout(() => {
+          selectBranchItem(nextActiveIndex);
+        }, 0);
+        return;
       }
 
       editor.view.dispatch(tr);
@@ -109,72 +128,87 @@ export const Branch = ({ node, editor, getPos }: BranchProps) => {
   };
 
   return (
-    <NodeViewWrapper className="border-primary my-6 overflow-hidden rounded-xl border border-dashed bg-white">
-      {/* 브랜치 아이템 헤더 */}
-      <div className="bg-primary-50 border-primary relative flex flex-wrap items-center border-b border-dashed">
-        {node.content.content.map((branchItem: any, index: number) => {
-          const isActive = index === activeBranchItemIndex;
+    <NodeViewWrapper className="border-primary my-12 overflow-hidden rounded-xl border border-dashed bg-white shadow-sm">
+      <motion.div
+        layout
+        className="bg-primary-50 border-primary relative flex flex-wrap items-center gap-1 border-b border-dashed p-1"
+      >
+        <AnimatePresence mode="popLayout" initial={false}>
+          {node.content.content.map((branchItem: any, index: number) => {
+            const isActive = index === activeBranchItemIndex;
+            const itemKey = branchItem.attrs.id || `branch-${index}`;
 
-          return (
-            <div key={index} className={cn('group mona10x12 relative flex items-center px-2 py-1 transition-colors')}>
-              {isEditable ? (
-                <>
-                  <TextInput
-                    value={branchItem.attrs.title || ''}
-                    onChange={e => updateBranchItemTitle(index, e.target.value)}
-                    onClick={() => selectBranchItem(index)}
-                    placeholder="브랜치 이름"
-                    className={cn(
-                      'max-w-24 border-none bg-transparent focus:ring-0',
-                      isActive ? 'font-bold' : 'font-normal',
-                    )}
-                  />
-                  <IconButton
-                    icon="close"
-                    size="sm"
-                    variant="clear"
-                    aria-label="브랜치 아이템 삭제"
-                    onClick={() => removeBranchItem(index)}
-                  />
-                </>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => selectBranchItem(index)}
-                  className={cn(
-                    'px-4 py-2 text-sm font-medium',
-                    isActive ? 'text-primary' : 'text-slate-500 hover:bg-slate-100',
+            return (
+              <motion.div
+                key={itemKey}
+                layout
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.5,
+                  width: 0,
+                  transition: { duration: 0.2, ease: 'easeInOut' },
+                }}
+                transition={springTransition as any}
+                className={cn(
+                  'group relative flex items-center overflow-hidden rounded-lg',
+                  isActive ? 'bg-white shadow' : 'hover:bg-primary-100',
+                )}
+              >
+                <div className="flex h-9 items-center px-1">
+                  {isEditable ? (
+                    <>
+                      <TextInput
+                        value={branchItem.attrs.title || ''}
+                        onChange={e => updateBranchItemTitle(index, e.target.value)}
+                        onClick={() => selectBranchItem(index)}
+                        className={cn(
+                          'h-7 max-w-[100px] border-none bg-transparent text-sm transition-all focus:ring-0',
+                          isActive ? 'font-bold' : 'font-normal',
+                        )}
+                      />
+                      <IconButton
+                        icon="close"
+                        size="sm"
+                        variant="clear"
+                        aria-label="탭 삭제"
+                        onClick={e => {
+                          e.stopPropagation();
+                          removeBranchItem(index);
+                        }}
+                        className="ml-[-4px] opacity-0 group-hover:opacity-100"
+                      />
+                    </>
+                  ) : (
+                    <button onClick={() => selectBranchItem(index)} className="px-4 text-sm font-medium">
+                      {branchItem.attrs.title}
+                    </button>
                   )}
-                >
-                  {branchItem.attrs.title || `Branch ${index + 1}`}
-                </button>
-              )}
+                </div>
 
-              {/* 2. Framer Motion 언더라인 추가 */}
-              {isActive && (
-                <motion.div
-                  layoutId="activeBranchItemUnderline"
-                  className="absolute right-0 bottom-0 left-0 h-[2px] bg-blue-600"
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-            </div>
-          );
-        })}
+                {isActive && (
+                  <motion.div
+                    layoutId="activeUnderline"
+                    className="bg-primary-600 absolute right-0 bottom-0 left-0 h-[2px]"
+                    transition={springTransition as any}
+                  />
+                )}
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
 
+        {/* 추가 버튼 */}
         {editor.isEditable && (
-          <IconButton
-            icon="add"
-            size="sm"
-            variant="clear"
-            aria-label="브랜치 아이템 추가"
-            onClick={addBranchItemNode}
-          />
+          <motion.div layout>
+            <IconButton icon="add" size="sm" variant="clear" aria-label="탭 추가" onClick={addBranchItemNode} />
+          </motion.div>
         )}
-      </div>
+      </motion.div>
 
-      {/* 브랜치 아이템 본문 영역 */}
-      <div className="p-4">
+      {/* 본문 영역 */}
+      <div className="relative min-h-[100px]">
         <NodeViewContent className="branch-content-area" />
       </div>
     </NodeViewWrapper>
@@ -182,9 +216,27 @@ export const Branch = ({ node, editor, getPos }: BranchProps) => {
 };
 
 export const BranchItem = ({ node }: { node: any }) => {
+  const isActive = node.attrs.isActive;
+
   return (
-    <NodeViewWrapper className={`branch-item-panel ${node.attrs.isActive ? 'block' : 'hidden'}`}>
-      <NodeViewContent />
+    <NodeViewWrapper
+      className={cn(
+        'branch-item-panel',
+        // isActive가 아닐 때만 렌더링에서 제외하되,
+        // Tiptap이 관리할 수 있도록 최소한의 공간은 유지하거나
+        // 혹은 명시적인 display 속성을 사용합니다.
+      )}
+      style={{
+        display: isActive ? 'block' : 'none',
+        // 혹은 더 안전하게:
+        // visibility: isActive ? 'visible' : 'hidden',
+        // height: isActive ? 'auto' : 0,
+        // overflow: 'hidden'
+      }}
+    >
+      <div className="p-5">
+        <NodeViewContent />
+      </div>
     </NodeViewWrapper>
   );
 };

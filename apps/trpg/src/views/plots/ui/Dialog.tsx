@@ -92,7 +92,7 @@ const Dialog = ({ node, updateAttributes, editor }: DialogProps) => {
   if (isEditable) {
     return (
       <NodeViewWrapper>
-        <div className="my-2 flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 px-2 py-4">
+        <div className="my-12 flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 px-2 py-4">
           <div className="mona10x12">
             <Checkbox label="메모" checked={memo} onChange={e => updateAttributes({ memo: e.target.checked })} />
           </div>

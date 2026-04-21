@@ -36,25 +36,15 @@ const Nav = () => {
       label: '홈',
     },
     {
-      href: '/write',
-      icon: 'contract_edit',
-      label: '새 글',
-    },
-    {
-      href: '/list',
-      icon: 'auto_stories',
-      label: '보관함',
-    },
-    {
       href: '/howtouse',
       icon: 'help',
       label: '사용법',
     },
-    {
-      href: '/settings',
-      icon: 'settings',
-      label: '설정',
-    },
+    // {
+    //   href: '/settings',
+    //   icon: 'settings',
+    //   label: '설정',
+    // },
   ];
 
   return (

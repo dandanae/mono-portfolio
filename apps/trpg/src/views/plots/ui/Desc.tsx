@@ -82,7 +82,7 @@ const Desc = ({ node, updateAttributes, editor }: DescProps) => {
   if (isEditable) {
     return (
       <NodeViewWrapper>
-        <div className="my-2 flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 px-2 py-4">
+        <div className="my-12 flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 px-2 py-4">
           <div className="mona10x12 flex flex-wrap gap-4">
             <Checkbox
               label="키퍼"

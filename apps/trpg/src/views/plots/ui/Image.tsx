@@ -22,7 +22,7 @@ const Image = ({ node, updateAttributes, editor }: ImageProps) => {
   if (isEditable) {
     return (
       <NodeViewWrapper
-        className="border-primary bg-primary-50/20 mona10x12 my-6 rounded-xl border border-dashed px-8 py-4"
+        className="border-primary bg-primary-50/20 mona10x12 my-12 rounded-xl border border-dashed px-8 py-4"
         onMouseDown={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
       >
         <h2 className="text-primary-800 text-lg font-bold">이미지 정보</h2>
@@ -58,7 +58,7 @@ const Image = ({ node, updateAttributes, editor }: ImageProps) => {
           type="button"
           aria-label={`이미지 복사 ${title}`}
           onClick={() => copy(`/desc [${title}](${url})`)}
-          className="focus-ring hover-ring relative my-6 w-full select-none"
+          className="focus-ring hover-ring relative my-12 w-full select-none"
         >
           <CopyWrapper isCopied={isCopied}>
             <NextImage src={url} alt={title} className="m-auto" width={500} height={500} />

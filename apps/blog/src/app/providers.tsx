@@ -1,4 +1,5 @@
 'use client';
+import { AnimatePresence } from 'framer-motion';
 import { IntlayerClientProvider } from 'next-intlayer';
 import { ThemeProvider } from 'next-themes';
 import React from 'react';
@@ -11,7 +12,7 @@ export const Providers = ({ children }: ProvidersProps) => {
   return (
     <IntlayerClientProvider>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        {children}
+        <AnimatePresence mode="wait">{children}</AnimatePresence>
       </ThemeProvider>
     </IntlayerClientProvider>
   );

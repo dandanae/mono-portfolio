@@ -65,7 +65,7 @@ const SignUp = () => {
           damping: 20,
           delay: 0.2,
         }}
-        className="bg-primary/20 absolute aspect-square w-full max-w-58 rounded-full blur-2xl md:max-w-md"
+        className="bg-primary/20 dark:bg-primary/40 absolute aspect-square w-full max-w-58 rounded-full blur-2xl md:max-w-md"
       />
       <UpContainer className="absolute flex w-full max-w-64 flex-col gap-6">
         <motion.h2

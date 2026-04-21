@@ -9,3 +9,4 @@ export { default as Message } from './Message';
 export { default as Music } from './Music';
 export { default as ScrollWrapper } from './ScrollWrapper';
 export { default as Title } from './Title';
+export { default as WriteTools } from './WriteTools';

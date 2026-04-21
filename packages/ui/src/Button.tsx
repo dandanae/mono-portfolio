@@ -62,7 +62,7 @@ const buttonStyles = tv({
       color: "primary",
       fill: "weak",
       class: [
-        "ui:bg-primary/10 ui:text-primary ui:hover:bg-primary/20 ui:active:bg-primary/30",
+        "ui:bg-primary/10  ui:text-primary ui:hover:bg-primary/20 ui:active:bg-primary/30",
         "ui:dark:bg-primary/40 ui:dark:text-white ui:hover:bg-primary/50 ui:active:bg-primary/60",
       ],
     },

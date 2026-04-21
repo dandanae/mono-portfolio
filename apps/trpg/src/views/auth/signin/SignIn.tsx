@@ -35,7 +35,7 @@ const SignIn = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="relative m-auto flex aspect-square w-full max-w-2xl flex-col items-center justify-center"
+      className="relative m-auto flex h-full w-full max-w-2xl flex-col items-center justify-center"
     >
       {/* 배경 그라데이션 원 */}
       <motion.div
@@ -47,7 +47,7 @@ const SignIn = () => {
           damping: 20,
           delay: 0.2,
         }}
-        className="bg-primary/20 absolute aspect-square w-full max-w-58 rounded-full blur-2xl md:max-w-md"
+        className="bg-primary/20 dark:bg-primary/40 absolute aspect-square w-full max-w-58 rounded-full blur-2xl md:max-w-md"
       />
 
       <UpContainer className="absolute flex w-full max-w-64 flex-col gap-6">

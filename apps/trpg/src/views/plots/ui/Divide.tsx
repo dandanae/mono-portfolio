@@ -61,7 +61,7 @@ const Divide = ({ node, editor }: DivideProps) => {
         type="button"
         onClick={() => copy(text())}
         aria-label={`구분선 복사 ${node.textContent}`}
-        className="focus-ring hover-ring my-6 w-full select-none active:scale-95"
+        className="focus-ring hover-ring my-12 w-full select-none active:scale-95"
         style={{ color: primaryColor }}
       >
         <CopyWrapper isCopied={isCopied} className="flex items-center justify-center">
