@@ -59,32 +59,39 @@ const Handout = ({ node, updateAttributes, editor }: HandoutProps) => {
     node.descendants((childNode: any) => {
       if (childNode.isText) {
         let chunk = childNode.text || '';
-
-        // 마크(bold, italic) 처리
         childNode.marks?.forEach((mark: any) => {
           if (mark.type.name === 'bold') chunk = `**${chunk}**`;
           if (mark.type.name === 'italic') chunk = `*${chunk}*`;
         });
-
         contentHtml += chunk;
-      } else if (childNode.type.name === 'hardBreak' || childNode.type.name === 'paragraph') {
+      } else if (childNode.type.name === 'hardBreak') {
+        contentHtml += ' \n';
+      } else if (childNode.type.name === 'paragraph') {
         if (contentHtml.length > 0 && !contentHtml.endsWith('\n')) {
           contentHtml += '\n';
         }
       }
     });
 
-    // 2. 줄바꿈(\n) 기준으로 쪼개서 각각 스타일 적용
-    const lines = contentHtml.split('\n').filter(line => line.trim() !== '');
+    const lines = contentHtml.split('\n');
 
-    const middle = lines.map(line => `[${line}](" style="${injectStyle(contentCss)}")`).join('');
+    if (lines.length > 1 && lines[lines.length - 1] === '') {
+      lines.pop();
+    }
 
-    const tt = `[${node.attrs.title || ''}](" style="${injectStyle(titleCss)}")`;
+    const middle = lines
+      .map(line => {
+        const displayLine = line === '' ? ' ' : line;
+        return `[${displayLine}](" style="${injectStyle(contentCss)}")`;
+      })
+      .join('');
+
+    const tt = `[${node.attrs.title.replace('[', '').replace(']', '') || ' '}](" style="${injectStyle(titleCss)}")`;
     const tt2 = `[┈┈┈┈┈┈┈┈┈](" style="${injectStyle(titleCss)}")`;
     const t = `[ ](" style="${injectStyle(hotCss)}" class="hot")`;
     const b = `[ ](" style="${injectStyle(hobCss)}" class="hob")`;
 
-    return lines.length > 0 ? `/desc ${t}${tt}${tt2}${middle}${b}` : `/desc ${t}${tt}${b}`;
+    return `/desc ${t}${tt}${tt2}${middle}${b}`;
   };
 
   if (isEditable) {
@@ -113,7 +120,11 @@ const Handout = ({ node, updateAttributes, editor }: HandoutProps) => {
             <TextInput
               label=""
               value={node.attrs.title}
-              onChange={e => updateAttributes({ title: e.target.value })}
+              onChange={e => {
+                const filteredValue = e.target.value.replace(/[^ㄱ-ㅎ가-힣a-zA-Z0-9\s]/g, '');
+
+                updateAttributes({ title: filteredValue });
+              }}
               className="font-bold"
               placeholder="핸드아웃 제목"
               style={{ color: primaryColor }}
@@ -154,65 +165,58 @@ const Handout = ({ node, updateAttributes, editor }: HandoutProps) => {
 
   return (
     <NodeViewWrapper>
-      <button
-        type="button"
-        onClick={() => copy(text())}
-        aria-label={`핸드아웃 복사 ${node.textContent}`}
-        className="hover-ring focus-ring my-12 w-full text-center active:scale-95"
-      >
-        <CopyWrapper isCopied={isCopied} className="flex w-[270px] flex-col items-center">
+      <CopyWrapper isCopied={isCopied} onClick={() => copy(text())} className="flex w-[270px] flex-col items-center">
+        <span
+          aria-hidden
+          className="relative m-auto block w-[270px] border-2 border-b-0 bg-white pt-4"
+          style={{ borderColor: primaryColor }}
+        >
           <span
-            aria-hidden
-            className="relative m-auto block w-[270px] border-2 border-b-0 bg-white pt-4"
-            style={{ borderColor: primaryColor }}
-          >
+            className="absolute top-1 left-1"
+            style={{
+              borderStyle: 'solid',
+              borderWidth: '8px 8px 0px 0px',
+              borderColor: `${primaryColor} transparent transparent transparent`,
+            }}
+          />
+        </span>
+        <span
+          className="block w-[270px] border-2 border-t-0 border-b-0 bg-white px-8 text-center font-bold"
+          style={{ borderColor: primaryColor, color: primaryColor }}
+        >
+          {node.attrs.title}
+        </span>
+        {node.textContent.length > 0 && (
+          <>
             <span
-              className="absolute top-1 left-1"
-              style={{
-                borderStyle: 'solid',
-                borderWidth: '8px 8px 0px 0px',
-                borderColor: `${primaryColor} transparent transparent transparent`,
-              }}
-            />
-          </span>
-          <span
-            className="block w-[270px] border-2 border-t-0 border-b-0 bg-white px-8 text-center font-bold"
-            style={{ borderColor: primaryColor, color: primaryColor }}
-          >
-            {node.attrs.title}
-          </span>
-          {node.textContent.length > 0 && (
-            <>
-              <span
-                aria-hidden
-                className="m-auto block w-[270px] border-2 border-t-0 border-b-0 bg-white px-8 text-center font-bold"
-                style={{ borderColor: primaryColor, color: primaryColor }}
-              >
-                ┈┈┈┈┈┈┈┈┈
-              </span>
+              aria-hidden
+              className="m-auto block w-[270px] border-2 border-t-0 border-b-0 bg-white px-8 text-center font-bold"
+              style={{ borderColor: primaryColor, color: primaryColor }}
+            >
+              ┈┈┈┈┈┈┈┈┈
+            </span>
 
-              <NodeViewContent
-                className="m-auto block w-[270px] border-2 border-t-0 border-b-0 bg-white px-8 py-1 text-left font-sans text-sm text-[#333333]"
-                style={{ borderColor: primaryColor }}
-              />
-            </>
-          )}
-          <span
-            aria-hidden
-            className="relative m-auto block w-[270px] border-2 border-t-0 bg-white pt-4"
-            style={{ borderColor: primaryColor }}
-          >
-            <span
-              className="absolute right-1 bottom-1"
-              style={{
-                borderStyle: 'solid',
-                borderWidth: '0px 0px 8px 8px',
-                borderColor: `transparent transparent ${primaryColor} transparent`,
-              }}
+            <NodeViewContent
+              className="m-auto block w-[270px] border-2 border-t-0 border-b-0 bg-white px-8 py-1 text-left font-sans text-sm text-[#333333]"
+              style={{ borderColor: primaryColor }}
             />
-          </span>
-        </CopyWrapper>
-      </button>
+          </>
+        )}
+        <span
+          aria-hidden
+          className="relative m-auto block w-[270px] border-2 border-t-0 bg-white pt-4"
+          style={{ borderColor: primaryColor }}
+        >
+          <span
+            className="absolute right-1 bottom-1"
+            style={{
+              borderStyle: 'solid',
+              borderWidth: '0px 0px 8px 8px',
+              borderColor: `transparent transparent ${primaryColor} transparent`,
+            }}
+          />
+        </span>
+      </CopyWrapper>
     </NodeViewWrapper>
   );
 };

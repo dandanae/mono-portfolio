@@ -2,6 +2,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 // AnimatePresence 추가
 import React from 'react';
+import { tanglingTransition } from '@/shared/animations';
 import { IconButton, TextInput } from '@repo/ui';
 import { cn } from '@repo/utils';
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
@@ -28,7 +29,8 @@ export const Branch = ({ node, editor, getPos }: BranchProps) => {
   );
 
   // 브랜치 아이템 선택 로직
-  const selectBranchItem = (index: number) => {
+  const selectBranchItem = (index: number, shouldFocus = true) => {
+    // shouldFocus 인자 추가
     if (typeof getPos !== 'function') return;
 
     const { tr } = editor.state;
@@ -43,26 +45,32 @@ export const Branch = ({ node, editor, getPos }: BranchProps) => {
       currentPos += child.nodeSize;
     });
 
-    // 중요: 에디터에 포커스를 주면서 트랜잭션을 실행해야 즉시 반영됩니다.
     editor.view.dispatch(tr);
-    editor.commands.focus();
+
+    // input 입력 시에는 focus를 가로채지 않도록 조건부 실행
+    if (shouldFocus) {
+      editor.commands.focus();
+    }
   };
 
   const updateBranchItemTitle = (index: number, newTitle: string) => {
     if (typeof getPos !== 'function') return;
-    const { tr } = editor.state;
-    const pos = getPos();
-    let currentPos = pos + 1;
 
-    node.content.forEach((child: any, idx: number) => {
-      if (idx === index) {
-        tr.setNodeMarkup(currentPos, undefined, {
-          ...child.attrs,
-          title: newTitle,
-        });
-      }
-      currentPos += child.nodeSize;
-    });
+    const { tr } = editor.state;
+    const startPos = getPos();
+    let currentPos = startPos + 1;
+
+    // 수정하고자 하는 탭의 정확한 위치 계산
+    for (let i = 0; i < index; i++) {
+      currentPos += node.content.child(i).nodeSize;
+    }
+
+    // 해당 위치의 노드 속성만 변경
+    // .setMeta('preventScroll', true)를 추가하여 화면이 튀는 것을 방지합니다.
+    tr.setNodeMarkup(currentPos, undefined, {
+      ...node.content.child(index).attrs,
+      title: newTitle,
+    }).setMeta('preventScroll', true);
 
     editor.view.dispatch(tr);
   };
@@ -128,12 +136,17 @@ export const Branch = ({ node, editor, getPos }: BranchProps) => {
   };
 
   return (
-    <NodeViewWrapper className="border-primary my-12 overflow-hidden rounded-xl border border-dashed bg-white shadow-sm">
+    <NodeViewWrapper className="border-primary dark:border-primary-900 my-6 overflow-hidden rounded-xl border border-dashed shadow-sm">
       <motion.div
+        contentEditable={false}
         layout
-        className="bg-primary-50 border-primary relative flex flex-wrap items-center gap-1 border-b border-dashed p-1"
+        className="bg-primary-50 dark:bg-primary-50/10 border-primary dark:border-primary-900 relative flex flex-wrap items-center gap-1 border-b border-dashed p-1"
       >
-        <AnimatePresence mode="popLayout" initial={false}>
+        <AnimatePresence
+          key={node.content.content.map((branchItem: any) => branchItem.attrs.id).join(',')}
+          mode="popLayout"
+          initial={false}
+        >
           {node.content.content.map((branchItem: any, index: number) => {
             const isActive = index === activeBranchItemIndex;
             const itemKey = branchItem.attrs.id || `branch-${index}`;
@@ -152,8 +165,7 @@ export const Branch = ({ node, editor, getPos }: BranchProps) => {
                 }}
                 transition={springTransition as any}
                 className={cn(
-                  'group relative flex items-center overflow-hidden rounded-lg',
-                  isActive ? 'bg-white shadow' : 'hover:bg-primary-100',
+                  'group hover:bg-primary-100 dark:hover:bg-primary-900 t-align-center relative flex items-center overflow-hidden rounded-lg',
                 )}
               >
                 <div className="flex h-9 items-center px-1">
@@ -161,8 +173,24 @@ export const Branch = ({ node, editor, getPos }: BranchProps) => {
                     <>
                       <TextInput
                         value={branchItem.attrs.title || ''}
-                        onChange={e => updateBranchItemTitle(index, e.target.value)}
-                        onClick={() => selectBranchItem(index)}
+                        onChange={e => {
+                          // 1. 상태 업데이트를 먼저 실행
+                          updateBranchItemTitle(index, e.target.value);
+                        }}
+                        onClick={e => {
+                          e.stopPropagation();
+                          // 2. 이미 해당 탭이 활성화 상태라면 selectBranchItem을 호출하지 않음 (재렌더링 방지)
+                          if (!branchItem.attrs.isActive) {
+                            selectBranchItem(index, false);
+                          }
+                        }}
+                        onBlur={() => {
+                          // 입력이 끝나면 에디터에 알림 (필요시)
+                        }}
+                        onKeyDown={e => {
+                          e.stopPropagation();
+                        }}
+                        contentEditable={false}
                         className={cn(
                           'h-7 max-w-[100px] border-none bg-transparent text-sm transition-all focus:ring-0',
                           isActive ? 'font-bold' : 'font-normal',
@@ -181,9 +209,14 @@ export const Branch = ({ node, editor, getPos }: BranchProps) => {
                       />
                     </>
                   ) : (
-                    <button onClick={() => selectBranchItem(index)} className="px-4 text-sm font-medium">
+                    <motion.button
+                      whileTap={{ scaleX: 1.1, scaleY: 0.8 }}
+                      transition={tanglingTransition as any}
+                      onClick={() => selectBranchItem(index)}
+                      className="px-4 text-sm font-medium"
+                    >
                       {branchItem.attrs.title}
-                    </button>
+                    </motion.button>
                   )}
                 </div>
 
@@ -220,18 +253,11 @@ export const BranchItem = ({ node }: { node: any }) => {
 
   return (
     <NodeViewWrapper
-      className={cn(
-        'branch-item-panel',
-        // isActive가 아닐 때만 렌더링에서 제외하되,
-        // Tiptap이 관리할 수 있도록 최소한의 공간은 유지하거나
-        // 혹은 명시적인 display 속성을 사용합니다.
-      )}
+      className={cn('branch-item-panel')}
       style={{
-        display: isActive ? 'block' : 'none',
-        // 혹은 더 안전하게:
-        // visibility: isActive ? 'visible' : 'hidden',
-        // height: isActive ? 'auto' : 0,
-        // overflow: 'hidden'
+        visibility: isActive ? 'visible' : 'hidden',
+        height: isActive ? 'auto' : 0,
+        overflow: 'hidden',
       }}
     >
       <div className="p-5">

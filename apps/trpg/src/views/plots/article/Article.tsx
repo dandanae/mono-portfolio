@@ -1,8 +1,10 @@
 'use client';
 
+import { motion } from 'motion/react';
 import { useParams, useRouter } from 'next/navigation';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { UpContainer, upItemVariants } from '@/shared/animations';
 import { AlertDialog, Button, IconButton, TextInput } from '@repo/ui';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Subscript from '@tiptap/extension-subscript';
@@ -33,6 +35,13 @@ const Article = () => {
   const { id } = useParams();
   const { scrollPercent } = useScrollAtoms();
   const { kpc, setKpc, pc, setPc, primaryColor, setPrimaryColor, secondaryColor, setSecondaryColor } = usePlotAtoms();
+  const [isFirstRender, setIsFirstRender] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsFirstRender(false);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const { data: plot } = useQuery({
     queryKey: ['plot', id],
@@ -118,15 +127,17 @@ const Article = () => {
         typeof plot.content === 'string' ? replaceJosa(plot.content, kpc, pc) : replaceJson(plot.content, kpc, pc);
 
       if (editor.getHTML() !== processedContent) {
-        editor.commands.setContent(processedContent);
+        queueMicrotask(() => {
+          editor.commands.setContent(processedContent);
+        });
       }
     }
   }, [plot?.content, editor, kpc, pc]);
 
   return (
-    <div className="relative px-8 md:px-6 md:pl-20">
-      <div className="bg-background/60 fixed top-0 right-0 left-0 z-50 h-24 px-4 py-2 shadow shadow-slate-200 backdrop-blur md:px-6 md:pl-24 dark:shadow-slate-700">
-        <div className="flex h-10 items-center justify-between">
+    <UpContainer isFirst={isFirstRender} className="relative ml-0 w-full md:ml-18">
+      <div className="bg-background/60 absolute top-0 right-0 left-0 z-50 flex h-24 items-center px-4 py-2 shadow shadow-slate-200 backdrop-blur dark:shadow-slate-700">
+        <motion.div variants={upItemVariants} className="mx-auto flex h-10 w-full items-center justify-between">
           <div className="flex items-center gap-2">
             <IconButton icon="arrow_back" size="lg" color="light" aria-label="뒤로가기" onClick={() => router.back()} />
             <h2 className="mona10x12 w-full max-w-24 truncate text-2xl font-bold md:max-w-64">{plot?.title}</h2>
@@ -140,19 +151,19 @@ const Article = () => {
               actionLoading={isDeletePending}
               onAction={handleDelete}
             >
-              <Button color="danger" fill="weak">
+              <Button color="danger" fill="clear">
                 <span className="mona10x12 hidden! md:block!">삭제</span>
                 <span className="material-symbols-rounded block! text-lg! md:hidden!">delete</span>
               </Button>
             </AlertDialog>
 
-            <Button as="a" href={`/write/${id}`} color="primary" fill="weak">
+            <Button as="a" href={`/write/${id}`} color="primary" fill="clear">
               <span className="mona10x12 hidden! md:block!">수정</span>
               <span className="material-symbols-rounded block! text-lg! md:hidden!">edit</span>
             </Button>
             <Button
-              color="light"
-              fill="weak"
+              color="primary"
+              fill="clear"
               icon={plot?.shared ? 'lock_open_right' : 'lock'}
               loading={isUpdatePending}
               onClick={handleShared}
@@ -162,9 +173,12 @@ const Article = () => {
               </span>
             </Button>
           </div>
-        </div>
+        </motion.div>
       </div>
-      <main className="relative container flex h-[calc(100vh-6rem)] flex-col gap-2">
+      <motion.main
+        variants={upItemVariants}
+        className="relative container mx-auto flex h-[calc(100vh-6rem)] max-w-2xl flex-col gap-2"
+      >
         <ScrollWrapper className="no-scroll flex-1 overflow-y-auto px-4 py-28">
           <div className="mona10x12 my-6 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-2">
             <TextInput label="KPC 이름" value={kpc} onChange={e => setKpc(e.target.value)} />
@@ -183,8 +197,8 @@ const Article = () => {
 
           <EditorContent editor={editor} className="font-paperlogy min-h-full" />
         </ScrollWrapper>
-      </main>
-    </div>
+      </motion.main>
+    </UpContainer>
   );
 };
 

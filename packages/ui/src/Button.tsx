@@ -9,12 +9,11 @@ const buttonStyles = tv({
     color: {
       primary: "",
       danger: "",
-      light: "",
-      dark: "",
     },
     fill: {
       fill: "",
       weak: "",
+      clear: "",
     },
     size: {
       sm: "ui:h-8 ui:px-3 ui:py-1 ui:text-sm",
@@ -34,7 +33,6 @@ const buttonStyles = tv({
       fill: "fill",
       class: [
         "ui:bg-primary ui:text-white ui:hover:bg-primary-600 ui:active:bg-primary-700",
-        "ui:dark:bg-primary-800 ui:hover:bg-primary-700 ui:active:bg-primary-600",
       ],
     },
     {
@@ -43,48 +41,34 @@ const buttonStyles = tv({
       class:
         "ui:bg-red-600 ui:text-white ui:hover:bg-red-700 ui:active:bg-red-800",
     },
-    {
-      color: "light",
-      fill: "fill",
-      class: [
-        "ui:bg-white ui:text-primary ui:hover:bg-white/80 ui:active:bg-white/70",
-      ],
-    },
-    {
-      color: "dark",
-      fill: "fill",
-      class:
-        "ui:bg-slate-600 ui:text-white ui:hover:bg-slate-700 ui:active:bg-slate-800",
-    },
 
     // Weak
     {
       color: "primary",
       fill: "weak",
       class: [
-        "ui:bg-primary/10  ui:text-primary ui:hover:bg-primary/20 ui:active:bg-primary/30",
-        "ui:dark:bg-primary/40 ui:dark:text-white ui:hover:bg-primary/50 ui:active:bg-primary/60",
+        "ui:bg-primary/20  ui:text-primary ui:hover:bg-primary/30 ui:active:bg-primary/40",
       ],
     },
     {
       color: "danger",
       fill: "weak",
       class:
-        "ui:bg-red-600/10 ui:text-red-600 ui:hover:bg-red-600/20 ui:active:bg-red-600/30",
+        "ui:bg-red-600/20 ui:text-red-600 ui:hover:bg-red-600/30 ui:active:bg-red-600/40",
     },
+
+    // Clear
     {
-      color: "light",
-      fill: "weak",
+      color: "primary",
+      fill: "clear",
       class: [
-        "ui:bg-white/20 ui:text-primary ui:hover:bg-slate-200/30 ui:active:bg-slate-300/30",
-        "ui:dark:text-white",
+        "  ui:text-primary ui:hover:bg-primary/20 ui:active:bg-primary/40",
       ],
     },
     {
-      color: "dark",
-      fill: "weak",
-      class:
-        "ui:bg-slate-600/10 ui:text-slate-600 ui:hover:bg-slate-600/20 ui:active:bg-slate-600/30",
+      color: "danger",
+      fill: "clear",
+      class: "ui:text-red-600 ui:hover:bg-red-600/20 ui:active:bg-red-600/40",
     },
   ],
   defaultVariants: {
@@ -151,7 +135,7 @@ export const Button = <T extends ElementType = "button">({
       <span
         className={cn(
           "ui:absolute material-symbols-rounded ui:animate-spin ui:text-[16px]! ui:opacity-0",
-          loading && "ui:opacity-100"
+          loading && "ui:opacity-100",
         )}
         aria-hidden="true"
       >

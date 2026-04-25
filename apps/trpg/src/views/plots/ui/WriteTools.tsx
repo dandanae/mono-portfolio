@@ -110,7 +110,7 @@ const WriteTools = ({ editor }: { editor: Editor }) => {
             size="lg"
             color="light"
             aria-label="핸드아웃 대사"
-            onClick={() => editor.chain().focus().toggleHandout().run()}
+            onClick={() => editor.chain().focus().toggleDialog().run()}
           />
         </Tooltip>
         <Tooltip label="핸드아웃 — 정보" className="mona10x12">

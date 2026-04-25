@@ -42,24 +42,20 @@ const Dice = ({ node, editor }: DiceProps) => {
   }
 
   return (
-    <NodeViewWrapper>
-      <button
-        type="button"
-        aria-label={`주사위 복사 ${node.textContent}`}
-        onClick={() => copy(`/desc [✦ ${node.textContent} ✦](#" style="${injectStyle(css)}")`)}
-        className="focus-ring hover-ring my-6 w-full select-none active:scale-95"
+    <NodeViewWrapper className="my-6">
+      <CopyWrapper
+        isCopied={isCopied}
+        onClick={() => copy(`/desc [✦ ${node.textContent} ✦](#" style="${injectStyle(css)}`)}
       >
-        <CopyWrapper isCopied={isCopied}>
-          <span
-            className="rounded-full px-4 py-1 font-sans text-sm text-white"
-            style={{
-              background: `linear-gradient(45deg, ${primaryColor}, ${secondaryColor})`,
-            }}
-          >
-            ✦ {node.textContent} ✦
-          </span>
-        </CopyWrapper>
-      </button>
+        <span
+          className="rounded-full px-4 py-1 font-sans text-sm text-white"
+          style={{
+            background: `linear-gradient(45deg, ${primaryColor}, ${secondaryColor})`,
+          }}
+        >
+          ✦ {node.textContent} ✦
+        </span>
+      </CopyWrapper>
     </NodeViewWrapper>
   );
 };

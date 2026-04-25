@@ -52,7 +52,7 @@ const TextInput = ({
     <div
       className={cn(
         "ui:flex ui:flex-col ui:gap-1.5 ui:group ui:w-full",
-        className
+        className,
       )}
     >
       {/* 라벨 영역 */}
@@ -62,7 +62,7 @@ const TextInput = ({
           className={cn(
             "ui:text-sm ui:ml-1 ui:transition-colors ui:duration-300",
             "ui:group-focus-within:text-primary",
-            error && "ui:text-red-600 ui:group-focus-within:text-red-600"
+            error && "ui:text-red-600 ui:group-focus-within:text-red-600",
           )}
         >
           {label} {required && <span className="ui:text-red-600">*</span>}
@@ -74,11 +74,10 @@ const TextInput = ({
         className={cn(
           "focus-ring ui:relative ui:flex ui:items-center ui:h-12 ui:w-full ui:rounded-xl ui:pl-4 ui:pr-2 ui:gap-2",
           "ui:transition-all ui:duration-300 ui:overflow-hidden",
-          "ui:border ui:border-slate-200 ui:bg-slate-50 ui:hover:bg-slate-200",
-          "ui:dark:border-slate-700 ui:dark:bg-slate-800 ui:dark:hover:bg-slate-700",
-          "ui:focus-within:bg-slate-100 ui:focus-within:border-primary",
+          "ui:border ui:border-foreground/20 ui:bg-background  ui:text-foreground",
+          "ui:hover:bg-foreground/10 ui:active:bg-foreground/10 ui:focus-within:border-primary ui:focus-within:bg-primary/10 ui:focus-within:hover:bg-primary/10",
           error &&
-            "ui:border-red-200 ui:bg-red-50 ui:focus-within:border-red-600 ui:focus-within:bg-red-50"
+            "ui:border-red-200 ui:bg-red-50 ui:focus-within:border-red-600 ui:focus-within:bg-red-50",
         )}
       >
         {/* 실제 Input 요소 */}
@@ -91,7 +90,7 @@ const TextInput = ({
           className={cn(
             "ui:flex-1 ui:min-w-0 ui:h-full ui:bg-transparent ui:outline-none ui:text-sm",
             "ui:placeholder:text-slate-400",
-            inputClassName
+            inputClassName,
           )}
           {...props}
         />

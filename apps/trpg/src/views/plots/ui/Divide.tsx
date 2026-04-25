@@ -42,7 +42,7 @@ const Divide = ({ node, editor }: DivideProps) => {
   if (isEditable) {
     return (
       <NodeViewWrapper>
-        <div className="flex items-center justify-center">
+        <div className="my-6 flex items-center justify-center">
           <span aria-hidden className="select-none">
             ┈┈┈｡ﾟ•┈୨
           </span>
@@ -57,19 +57,11 @@ const Divide = ({ node, editor }: DivideProps) => {
 
   return (
     <NodeViewWrapper>
-      <button
-        type="button"
-        onClick={() => copy(text())}
-        aria-label={`구분선 복사 ${node.textContent}`}
-        className="focus-ring hover-ring my-12 w-full select-none active:scale-95"
-        style={{ color: primaryColor }}
-      >
-        <CopyWrapper isCopied={isCopied} className="flex items-center justify-center">
-          <span aria-hidden>┈┈┈｡ﾟ•┈୨ </span>
-          <span className="mx-1.5 font-bold">{node.textContent}</span>
-          <span aria-hidden> ୧┈•ﾟ｡┈┈┈</span>
-        </CopyWrapper>
-      </button>
+      <CopyWrapper isCopied={isCopied} onClick={() => copy(text())} className="my-6 flex items-center justify-center">
+        <span aria-hidden>┈┈┈｡ﾟ•┈୨ </span>
+        <span className="mx-1.5 font-bold">{node.textContent}</span>
+        <span aria-hidden> ୧┈•ﾟ｡┈┈┈</span>
+      </CopyWrapper>
     </NodeViewWrapper>
   );
 };

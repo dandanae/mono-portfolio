@@ -29,24 +29,18 @@ const Message = ({ node, editor }: MessageProps) => {
 
   return (
     <NodeViewWrapper>
-      <button
-        type="button"
-        aria-label={`메시지 복사 ${node.textContent}`}
+      <CopyWrapper
+        isCopied={isCopied}
         onClick={() => copy(`/desc [${node.textContent}](#" class="msg")`)}
-        className="focus-ring hover-ring w-full select-none active:scale-95"
+        className="relative m-auto my-12 w-fit max-w-[250px] rounded-[20px] bg-[#E5E5EA] px-[18px] py-[8px] text-left font-sans text-sm text-black"
       >
-        <CopyWrapper
-          isCopied={isCopied}
-          className="relative m-auto max-w-[250px] rounded-[20px] bg-[#E5E5EA] px-[18px] py-[8px] text-left font-sans text-sm text-black"
-        >
-          <span
-            aria-hidden
-            className="absolute bottom-0 -left-[9px] h-[14px] w-[17px] border-r-8 border-[#E5E5EA]"
-            style={{ borderBottomRightRadius: '14px 7px' }}
-          />
-          <NodeViewContent />
-        </CopyWrapper>
-      </button>
+        <span
+          aria-hidden
+          className="absolute bottom-[-8px] -left-[28px] h-[14px] w-[17px] border-r-8 border-[#E5E5EA]"
+          style={{ borderBottomRightRadius: '14px 7px' }}
+        />
+        <NodeViewContent />
+      </CopyWrapper>
     </NodeViewWrapper>
   );
 };

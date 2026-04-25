@@ -41,7 +41,7 @@ const Modal = ({
   }, [open, close]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence key={open ? "open" : "close"}>
       {open && (
         <motion.div
           key="modal-backdrop"

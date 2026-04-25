@@ -112,7 +112,7 @@ const Dialog = ({ node, updateAttributes, editor }: DialogProps) => {
               className={cn(
                 'w-full max-w-[350px] min-w-[350px]',
                 memo
-                  ? 'font-hand block bg-white px-8 py-1 text-[18px] leading-relaxed'
+                  ? 'font-hand block bg-white px-8 py-1 text-[18px] leading-relaxed text-black'
                   : 'font-csm relative m-auto block px-8 py-1 text-[#808080]',
               )}
             />
@@ -134,47 +134,40 @@ const Dialog = ({ node, updateAttributes, editor }: DialogProps) => {
   }
 
   return (
-    <NodeViewWrapper>
-      <button
-        type="button"
-        aria-label={`다이얼로그 복사 ${node.textContent}`}
-        onClick={() => copy(text())}
-        className="hover-ring focus-ring my-8 flex w-full cursor-pointer flex-col text-center font-serif active:scale-95"
-      >
-        <CopyWrapper isCopied={isCopied}>
-          <div className="relative min-w-0 flex-1">
-            {!memo && (
-              <span
-                aria-hidden
-                className="absolute top-0 left-0 h-2.5 w-2.5"
-                style={{
-                  borderTop: `4px solid ${primaryColor}`,
-                  borderLeft: `4px solid ${primaryColor}`,
-                }}
-              />
-            )}
-
-            <NodeViewContent
-              className={
-                memo
-                  ? 'font-hand block bg-white px-8 py-1 text-[18px] leading-relaxed'
-                  : 'font-csm relative m-auto block w-[350px] px-8 py-1 text-[#808080]'
-              }
+    <NodeViewWrapper className="my-12">
+      <CopyWrapper isCopied={isCopied} onClick={() => copy(text())}>
+        <div className="relative min-w-0 flex-1">
+          {!memo && (
+            <span
+              aria-hidden
+              className="absolute top-0 left-0 h-2.5 w-2.5"
+              style={{
+                borderTop: `4px solid ${primaryColor}`,
+                borderLeft: `4px solid ${primaryColor}`,
+              }}
             />
+          )}
 
-            {!memo && (
-              <span
-                aria-hidden
-                className="absolute right-0 bottom-0 h-2.5 w-2.5"
-                style={{
-                  borderRight: `4px solid ${primaryColor}`,
-                  borderBottom: `4px solid ${primaryColor}`,
-                }}
-              />
-            )}
-          </div>
-        </CopyWrapper>
-      </button>
+          <NodeViewContent
+            className={
+              memo
+                ? 'font-hand block bg-white px-8 py-1 text-[18px] leading-relaxed text-black'
+                : 'font-csm relative m-auto block w-[350px] px-8 py-1 text-[#808080]'
+            }
+          />
+
+          {!memo && (
+            <span
+              aria-hidden
+              className="absolute right-0 bottom-0 h-2.5 w-2.5"
+              style={{
+                borderRight: `4px solid ${primaryColor}`,
+                borderBottom: `4px solid ${primaryColor}`,
+              }}
+            />
+          )}
+        </div>
+      </CopyWrapper>
     </NodeViewWrapper>
   );
 };

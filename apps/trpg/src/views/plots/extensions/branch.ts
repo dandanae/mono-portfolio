@@ -43,6 +43,9 @@ declare module '@tiptap/core' {
       insertBranch: () => ReturnType;
     };
   }
+  interface NodeConfig {
+    stopEvent?: (event: Event) => boolean | Element | null;
+  }
 }
 
 // 2. 전체 탭 컨테이너 (Parent)
@@ -96,5 +99,15 @@ export const BranchNode = Node.create({
 
   addNodeView() {
     return ReactNodeViewRenderer(Branch);
+  },
+
+  stopEvent(event: Event) {
+    const target = event.target as HTMLElement;
+    const isInput = target.tagName === 'INPUT' || target.closest('input');
+
+    // input 요소 내부에서 발생하는 모든 이벤트는 Tiptap이 처리하지 않도록 true 반환
+    if (isInput) return true;
+
+    return target.tagName === 'BUTTON' || !!target.closest('.group');
   },
 });

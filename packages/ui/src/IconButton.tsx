@@ -12,10 +12,10 @@ const iconButtonStyles = tv({
   variants: {
     variant: {
       clear: [
-        "ui:text-slate-800 ui:hover:text-primary ui:hover:bg-slate-100 ui:active:bg-slate-200",
-        "ui:dark:hover:text-primary-400 ui:dark:hover:bg-slate-700 ui:dark:active:bg-slate-600",
+        "ui:text-foreground ui:hover:text-primary ui:hover:bg-primary/10 ui:active:bg-primary/20",
       ],
       fill: [
+        // TODO: 다크 모드 처리 방법 변경
         "ui:bg-slate-50 ui:text-slate-600 ui:hover:bg-primary-100 ui:hover:text-primary-600",
         "ui:dark:bg-slate-800 ui:dark:text-slate-400 ui:dark:hover:bg-primary-800 ui:dark:hover:text-primary-400",
       ],
@@ -36,10 +36,10 @@ const iconButtonStyles = tv({
 type IconButtonVariantProps = VariantProps<typeof iconButtonStyles>;
 
 interface CustomProps<T extends ElementType> {
-  as?: T;
-  type?: "button" | "submit" | "reset";
-  icon: string;
-  loading?: boolean;
+  "as"?: T;
+  "type"?: "button" | "submit" | "reset";
+  "icon": string;
+  "loading"?: boolean;
   "aria-label": string;
 }
 

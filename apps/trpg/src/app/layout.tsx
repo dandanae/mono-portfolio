@@ -42,7 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <OverlayProvider>
           <Provider>
             <Nav />
-            <div className="relative container mx-auto flex h-full flex-col overflow-hidden">{children}</div>
+            <div className="relative flex h-full flex-col overflow-hidden">{children}</div>
           </Provider>
         </OverlayProvider>
       </body>

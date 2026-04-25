@@ -1,5 +1,6 @@
 'use client';
 import { signOut } from 'firebase/auth';
+import { motion } from 'motion/react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -40,6 +41,11 @@ const Nav = () => {
       icon: 'help',
       label: '사용법',
     },
+    {
+      href: '/separate',
+      icon: 'content_cut',
+      label: '문장 정리',
+    },
     // {
     //   href: '/settings',
     //   icon: 'settings',
@@ -48,7 +54,25 @@ const Nav = () => {
   ];
 
   return (
-    <nav
+    <motion.nav
+      initial={{
+        opacity: 0,
+        x: typeof window !== 'undefined' && window.innerWidth >= 768 ? -20 : 0,
+        y: typeof window !== 'undefined' && window.innerWidth >= 768 ? 0 : 20,
+      }}
+      animate={{
+        opacity: 1,
+        x: 0,
+        y: 0,
+      }}
+      transition={{
+        type: 'spring',
+        stiffness: 300,
+        damping: 15,
+        bounce: 0.8,
+        duration: 0.8,
+        delay: 2.2,
+      }}
       className={cn(
         'bg-background text-foreground fixed z-99 transition-colors duration-300',
         // 모바일
@@ -63,7 +87,7 @@ const Nav = () => {
             <li key={item.href} className="flex-1 md:w-full md:flex-none md:px-2">
               <Link
                 href={item.href}
-                className="flex flex-col items-center justify-center gap-1 rounded-xl py-1 transition-all duration-300 hover:bg-slate-200 active:scale-90 active:bg-slate-300 md:aspect-square md:gap-0 dark:hover:bg-slate-700 dark:active:bg-slate-600"
+                className="hover:text-primary active:text-primary flex flex-col items-center justify-center gap-1 rounded-xl py-1 transition-all duration-300 hover:bg-slate-200 active:scale-90 active:bg-slate-300 md:aspect-square md:gap-0 dark:hover:bg-slate-700 dark:active:bg-slate-600"
               >
                 <span
                   className={cn(
@@ -106,7 +130,7 @@ const Nav = () => {
           </button>
         </div>
       </ul>
-    </nav>
+    </motion.nav>
   );
 };
 

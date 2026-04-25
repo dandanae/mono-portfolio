@@ -17,6 +17,16 @@ const List = () => {
   const [constraints, setConstraints] = useState({ top: 0, bottom: 0 });
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
 
+  const [isFirstRender, setIsFirstRender] = useState(true);
+
+  useEffect(() => {
+    // 페이지가 마운트되고 나서 일정 시간(템플릿 애니메이션 종료 후)이 지나면 false로 변경
+    const timer = setTimeout(() => {
+      setIsFirstRender(false);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleOrderChange = (order: 'asc' | 'desc') => {
     setOrder(order);
   };
@@ -60,7 +70,10 @@ const List = () => {
   if (!userId || isLoading || isPending) return <Loading />;
 
   return (
-    <div className="relative m-auto flex w-full flex-col items-center justify-center px-8">
+    <UpContainer
+      isFirst={isFirstRender}
+      className="relative ml-0 flex w-full flex-col items-center justify-center md:ml-18"
+    >
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -79,7 +92,7 @@ const List = () => {
               handleOrderChange(order === 'desc' ? 'asc' : 'desc');
             }}
           >
-            {order === 'desc' ? '오래된순' : '최신순'}
+            {order === 'desc' ? '최신순' : '오래된순'}
           </TextButton>
           <Button as="a" href="/write" color="primary" size="sm" icon="add_notes">
             <span>새 글 추가</span>
@@ -87,13 +100,13 @@ const List = () => {
         </div>
       )}
 
-      <UpContainer key={`${userId}-${order}`} className="mona10x12 flex w-full flex-col gap-6">
+      <UpContainer key={`${userId}-${order}`} isFirst={isFirstRender} className="mona10x12 flex w-full">
         {/* 컨테이너에서 onWheel 이벤트 감지 */}
         <div ref={containerRef} onWheel={onWheel} className="relative h-[60dvh] w-full touch-none overflow-hidden">
           {plots && plots.length > 0 ? (
             <motion.div
               ref={dragRef}
-              style={{ y }} // MotionValue 연결
+              style={{ y }}
               drag="y"
               dragConstraints={constraints}
               dragElastic={0.1}
@@ -102,37 +115,35 @@ const List = () => {
             >
               <div className="mx-auto flex w-full max-w-96 flex-wrap md:max-w-3xl">
                 {plots.map(plot => (
-                  <>
-                    <motion.div key={plot.id} variants={upItemVariants} className="group w-full max-w-96 p-2 md:w-1/2">
-                      <Link
-                        href={`/article/${plot.id}`}
-                        className="group-hover:bg-background/50 ring-primary/30 dark:ring-primary/50 relative z-10 flex flex-col gap-2 rounded-lg bg-transparent p-6 ring backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 active:scale-95 md:flex-row"
-                      >
-                        <div className="flex w-full min-w-0 flex-col md:flex-auto">
-                          <div className="flex flex-col">
-                            <Tooltip label={plot.title} position="left">
-                              <span className="group-hover:text-primary line-clamp-1 truncate font-bold tracking-wider transition-colors duration-300">
-                                {plot.title}
-                              </span>
-                            </Tooltip>
-                            <span className="shrink-0 text-sm opacity-70">w. {plot.writer}</span>
-                          </div>
-                          <Tooltip label={plot.line} position="top">
-                            <span className="mt-2 line-clamp-1 max-w-full min-w-0 truncate text-sm tracking-tight opacity-80">
-                              {plot.line}
+                  <motion.div key={plot.id} variants={upItemVariants} className="group w-full max-w-96 p-2 md:w-1/2">
+                    <Link
+                      href={`/article/${plot.id}`}
+                      className="group-hover:bg-background/50 ring-primary/30 dark:ring-primary/50 relative z-10 flex flex-col gap-2 rounded-lg bg-transparent p-6 ring backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 active:scale-95 md:flex-row"
+                    >
+                      <div className="flex w-full min-w-0 flex-col md:flex-auto">
+                        <div className="flex flex-col">
+                          <Tooltip label={plot.title} position="left">
+                            <span className="group-hover:text-primary line-clamp-1 truncate font-bold tracking-wider transition-colors duration-300">
+                              {plot.title}
                             </span>
                           </Tooltip>
+                          <span className="shrink-0 text-sm opacity-70">w. {plot.writer}</span>
                         </div>
-                        <span className="shrink-0 text-sm tracking-tight opacity-40">
-                          {new Date(plot.createdAt ?? '').toLocaleDateString('ko-KR', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                          })}
-                        </span>
-                      </Link>
-                    </motion.div>
-                  </>
+                        <Tooltip label={plot.line} position="top">
+                          <span className="mt-2 line-clamp-1 max-w-full min-w-0 truncate text-sm tracking-tight opacity-80">
+                            {plot.line}
+                          </span>
+                        </Tooltip>
+                      </div>
+                      <span className="shrink-0 text-sm tracking-tight opacity-40">
+                        {new Date(plot.createdAt ?? '').toLocaleDateString('ko-KR', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </span>
+                    </Link>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>
@@ -147,7 +158,7 @@ const List = () => {
           )}
         </div>
       </UpContainer>
-    </div>
+    </UpContainer>
   );
 };
 

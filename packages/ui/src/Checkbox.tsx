@@ -4,9 +4,10 @@ import { tv, type VariantProps } from "tailwind-variants";
 const checkboxStyles = tv({
   slots: {
     root: "ui:group ui:inline-flex ui:items-center ui:gap-2.5 ui:cursor-pointer ui:select-none ui:transition-opacity ui:duration-200",
-    box: "ui:relative ui:flex ui:items-center ui:justify-center ui:w-5 ui:h-5 ui:rounded-md ui:border-2 ui:bg-white ui:transition-all ui:duration-200 ui:group-active:scale-90",
+    box: "ui:relative ui:flex ui:items-center ui:justify-center ui:w-5 ui:h-5 ui:rounded-md ui:border-2 ui:bg-background ui:transition-all ui:duration-200 ui:group-active:scale-90",
     icon: "material-symbols-rounded ui:text-[16px]! ui:font-bold ui:transition-transform ui:duration-200 ui:leading-none ui:text-white",
-    label: "ui:text-sm ui:font-medium ui:transition-colors ui:duration-200",
+    label:
+      "ui:text-sm ui:font-medium ui:transition-colors ui:duration-200 ui:select-none",
     errorText: "ui:text-xs ui:text-red-600 ui:mt-1 ui:ml-1 ui:font-medium",
   },
   variants: {
@@ -33,7 +34,7 @@ const checkboxStyles = tv({
       error: false,
       class: {
         box: "ui:bg-primary ui:border-primary",
-        label: "ui:text-slate-900",
+        label: "ui:text-foreground",
       },
     },
     {
@@ -62,8 +63,8 @@ const checkboxStyles = tv({
       indeterminate: false,
       error: false,
       class: {
-        box: "ui:border-slate-300 ui:group-hover:border-slate-400",
-        label: "ui:text-slate-600",
+        box: "ui:border-foreground/20 ui:group-hover:border-foreground/30",
+        label: "ui:text-foreground/40",
       },
     },
     {

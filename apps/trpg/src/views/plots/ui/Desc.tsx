@@ -35,7 +35,10 @@ const Desc = ({ node, updateAttributes, editor }: DescProps) => {
 
   const css = [
     gray ? `color: #808080;` : '',
-    shadow ? `text-shadow: 0 0 3px ${red ? '#ff00004d' : '#8080804d'}; font-weight: normal;` : '',
+    red ? `color: #ff0000;` : '',
+    shadow
+      ? `color: ${red ? '#ff000d' : '#808080'}; text-shadow: 0 0 3px ${red ? '#ff00004d' : '#8080804d'}; font-weight: normal;`
+      : '',
     background ? 'background-color: #000000; padding: 2px 8px; font-weight: bold; color: #ff0000;' : '',
   ].filter(Boolean);
 
@@ -108,11 +111,20 @@ const Desc = ({ node, updateAttributes, editor }: DescProps) => {
               onChange={e => {
                 const isChecked = e.target.checked;
                 if (isChecked) {
-                  updateAttributes({
-                    shadow: true,
-                    kp: false,
-                    background: false,
-                  });
+                  if (gray || red) {
+                    updateAttributes({
+                      shadow: true,
+                      kp: false,
+                      background: false,
+                    });
+                  } else {
+                    updateAttributes({
+                      shadow: true,
+                      gray: true,
+                      kp: false,
+                      background: false,
+                    });
+                  }
                 } else {
                   updateAttributes({ shadow: false });
                 }
@@ -171,9 +183,9 @@ const Desc = ({ node, updateAttributes, editor }: DescProps) => {
   const lines = getLines();
 
   return (
-    <NodeViewWrapper className="flex flex-col gap-1">
+    <NodeViewWrapper className="flex flex-col">
       {lines.map((line, index) => (
-        <DescLine key={index} line={line} markdown={formatMarkdown(line)} node={node} />
+        <DescLine key={`${line}-${index}`} line={line} markdown={formatMarkdown(line)} node={node} />
       ))}
     </NodeViewWrapper>
   );
@@ -186,33 +198,27 @@ const DescLine = ({ line, markdown, node }: { line: any[]; markdown: string; nod
   const { gray, background, shadow, kp, red } = node.attrs;
 
   return (
-    <button
-      type="button"
-      onClick={() => copy(markdown)}
-      className="hover-ring focus-ring group relative block w-full active:scale-95"
-    >
-      <CopyWrapper isCopied={isCopied}>
-        <div
-          className={cn(
-            'py-1 text-center leading-loose',
-            deco({ gray, background, red }),
-            kp && 'font-sans text-xs opacity-50',
-          )}
-          style={{ textShadow: shadow ? `0 0 5px #80808080` : undefined }}
-        >
-          {line.map((n: any, i: number) => (
-            <span
-              key={i}
-              className={cn(
-                n.marks?.some((m: any) => m.type.name === 'bold') ? 'font-bold' : '',
-                n.marks?.some((m: any) => m.type.name === 'italic') ? 'italic' : '',
-              )}
-            >
-              {n.text}
-            </span>
-          ))}
-        </div>
-      </CopyWrapper>
-    </button>
+    <CopyWrapper isCopied={isCopied} onClick={() => copy(markdown)}>
+      <div
+        className={cn(
+          'text-center leading-loose',
+          deco({ gray, background, red }),
+          kp && 'font-sans text-xs opacity-50',
+        )}
+        style={{ textShadow: shadow ? `0 0 5px #80808080` : undefined }}
+      >
+        {line.map((n: any, i: number) => (
+          <span
+            key={`${n.text}-${i}`}
+            className={cn(
+              n.marks?.some((m: any) => m.type.name === 'bold') ? 'font-bold' : '',
+              n.marks?.some((m: any) => m.type.name === 'italic') ? 'italic' : '',
+            )}
+          >
+            {n.text}
+          </span>
+        ))}
+      </div>
+    </CopyWrapper>
   );
 };

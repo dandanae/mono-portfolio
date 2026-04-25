@@ -30,7 +30,7 @@ const Image = ({ node, updateAttributes, editor }: ImageProps) => {
           <TextInput label="이미지 설명" value={title} onChange={e => updateAttributes({ title: e.target.value })} />
           <TextInput label="이미지 링크" value={url} onChange={e => updateAttributes({ url: e.target.value })} />
 
-          <AnimatePresence mode="wait">
+          <AnimatePresence key={url} mode="wait">
             {url && (
               <motion.div
                 className="mt-4"

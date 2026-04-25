@@ -31,7 +31,7 @@ const Tooltip = ({
           <span className="ui:inline-block ui:cursor-default">{children}</span>
         </TooltipPrimitive.Trigger>
 
-        <AnimatePresence>
+        <AnimatePresence key={open ? "open" : "close"}>
           {open && (
             <TooltipPrimitive.Portal forceMount>
               <TooltipPrimitive.Content side={position} sideOffset={8} asChild>
